@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping(path = "/employee")
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class EmployeeController {
 
     @Autowired
@@ -53,6 +54,18 @@ public class EmployeeController {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @PostMapping(path = "/query")
+    public @ResponseBody
+    Employee queryUser(@RequestBody EmployeeDto employeeDto) {
+        Optional<Employee> employee = employeeRepository.findEmployeeByFullName(employeeDto.getFullName());
+        if (employee.isPresent()) {
+            employeeRepository.save(employee.get());
+            return employee.get();
+        } else {
+            return new Employee();
         }
     }
 }
